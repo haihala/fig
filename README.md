@@ -79,7 +79,9 @@ Client indicates that their version of the named file is out of date and is requ
 
 Returns:
 
-* file
+* file - bytes contents of the file if is file. doesn't matter elsewhere.
+* write - bool whether to write or delete
+* folder - bool is path a folder or a file.
 * success status
 
 ### Push

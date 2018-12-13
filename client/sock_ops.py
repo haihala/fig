@@ -6,6 +6,7 @@ import socket
 import os
 import pathlib
 import json
+import shutil
 
 SIZE = 1024
 
@@ -36,8 +37,21 @@ def pull_sync(sock):
 		debug_print("Pulling " + path)
 		sock.send(pull(path))
 		reply = await_reply(sock, path)
-		with open(path, "wb") as f:
-			f.write(reply["file"])
+		if reply["write"]:
+			# Write new stuff
+			if reply["folder"]:
+				if not os.path.exists(path):
+					os.makedirs(path)
+			else:
+				with open(path, "wb") as f:
+					f.write(reply["file"])
+		else:
+			# Delete stuff
+			if reply["folder"]:
+				shutil.rmtree(path)
+			else:
+				os.remove(path)
+
 		debug_print(path + " done writing to disk")
 
 	debug_print("All files downloaded")

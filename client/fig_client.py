@@ -12,20 +12,21 @@ def main():
 	debug_print("Initialization successful")
 	debug_print("Checking remote")
 
-	pull_sync(sock)
+	pull_sync(sock, conf["project"])
+	debug_print("Pull successfull")
 
 	client_tree = construct_tree()
 	while True:
-		if differences(client_tree, construct_tree()):
+		if differences(client_tree):
 			debug_print("Different spotted, pushing")
 			client_tree = construct_tree()
 
-			push_sync(sock)
+			push_sync(sock, conf["project"])
 
-			if conf["auto"]:
-				time.sleep(conf["auto"])
-			else:
-				input("Enter to sync")
+		if conf["auto"]:
+			time.sleep(conf["auto"])
+		else:
+			input("Enter to sync")
 
 if __name__ == "__main__":
 	main()

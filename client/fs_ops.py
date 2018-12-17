@@ -7,7 +7,7 @@ def md5sum(path):
 	with open(path, 'rb') as f:
 		content = f.read()
 	hasher.update(content)
-	return hasher.digest()
+	return hasher.hexdigest()
 
 
 def construct_tree(root='.'):
@@ -18,14 +18,16 @@ def construct_tree(root='.'):
 			tree[item] = md5sum(path)
 		else:
 			tree[item] = construct_tree(root=path)
-
+	if "fig_conf.json" in tree:
+		del tree["fig_conf.json"]
 	return tree
 
-def differences(main_tree, secondary_tree):
+def differences(main_tree):
 	"""
 	Returns the paths of all files that have different md5sums and folders that don't exist in both versions.
 	"""
-	diff = recursive_diffs(main_tree, secondary_tree).union(recursive_diffs(secondary_tree, main_tree))
+	local_tree = construct_tree()
+	diff = recursive_diffs(main_tree, local_tree).union(recursive_diffs(local_tree, main_tree))
 
 	return diff
 
@@ -42,3 +44,6 @@ def recursive_diffs(main_tree, secondary_tree, root=''):
 			diff.add(path)
 
 	return diff
+
+if __name__ == '__main__':
+	print(differences({'test.txt': '098f6bcd4621d373cade4e832627b4f6'}))

@@ -29,7 +29,9 @@ Client sends out packages and gets replies. Server never initiates. Here is a li
 
 ### Fetch
 
-No arguments
+Arguments:
+
+* name of project
 
 Get a json object that describes the master structure and md5sums of the files and the unix timestamps they were pushed to server.
 
@@ -57,14 +59,6 @@ Example returns:
 			"bar.txt": "<md5sum of bar.txt>"
 		}
 	},
-	"times": {
-		"foo": 1544619124,
-		"foo/foo.png": 1544619124,
-		"bar": 1544619124,
-		"bar/bur": 1544619124,
-		"bar/bur/bur.py": 1544619124,
-		"bar/bar.txt": 1544619124,
-	},
 	"status": "ok"
 }
 ```
@@ -80,7 +74,7 @@ Client indicates that their version of the named file is out of date and is requ
 Returns:
 
 * file - bytes contents of the file if is file. doesn't matter elsewhere.
-* write - bool whether to write or delete
+* write - bool whether to write or delete, true is write, false is delete
 * folder - bool is path a folder or a file.
 * success status
 

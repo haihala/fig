@@ -1,39 +1,34 @@
 import json
 import os
 
-def fetch():
-	return bytes(json.dumps({
+def fetch(project):
+	return json.dumps({
 		"type": "fetch",
-		"arguments": {}
-	}))
+		"project": project
+	}).encode("UTF-8")
 
 def pull(path):
-	return bytes(json.dumps({
-		"type": "fetch",
-		"arguments": {
-			"path": path
-		}
-	}))
+	return json.dumps({
+		"type": "pull",
+		"path": path
+	}).encode("UTF-8")
 
 def push(path):
 	isfile = os.path.isfile(path)
+	content = ""
 	if isfile:
 		with open(path, "rb") as f:
-			content = f.read()
+			content = f.read().decode("UTF-8")
 
-	return bytes(json.dumps({
-		"type": "fetch",
-		"arguments": {
-			"path": path,
-			"isfile": isfile,
-			"content": content
-		}
-	}))
+	return json.dumps({
+		"type": "push",
+		"path": path,
+		"isfile": isfile,
+		"content": content
+	}).encode("UTF-8")
 
 def delete(path):
-	return bytes(json.dumps({
+	return json.dumps({
 		"type": "delete",
-		"arguments": {
-			"path": path
-		}
-	}))
+		"path": path
+	}).encode("UTF-8")

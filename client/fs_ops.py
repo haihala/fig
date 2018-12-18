@@ -1,6 +1,7 @@
 import hashlib
 import os
 import json
+import pathlib
 
 def md5sum(path):
 	hasher = hashlib.md5()
@@ -23,10 +24,12 @@ def construct_tree(root='.'):
 	return tree
 
 def differences(main_tree):
+	print(main_tree)
 	"""
 	Returns the paths of all files that have different md5sums and folders that don't exist in both versions.
 	"""
 	local_tree = construct_tree()
+	print(local_tree)
 	diff = recursive_diffs(main_tree, local_tree).union(recursive_diffs(local_tree, main_tree))
 
 	return diff
@@ -36,14 +39,16 @@ def recursive_diffs(main_tree, secondary_tree, root=''):
 
 	for item in main_tree:
 		path = os.path.join(root, item)
-		if item not in secondary_tree:
-			diff.add(path)
-		elif type(main_tree[item]) == type({}):
-			diff = diff.union(recursive_diffs(main_tree[item], secondary_tree[item], path))
-		elif main_tree[item] != secondary_tree[item]:
+		if type(main_tree[item]) == type({}):
+			if item not in secondary_tree:
+				diff.add(path)
+				diff = diff.union(set(str(i) for i in pathlib.Path(path).rglob("*")))
+			else:
+				diff = diff.union(recursive_diffs(main_tree[item], secondary_tree[item], path))
+		elif item not in secondary_tree or main_tree[item] != secondary_tree[item]:
 			diff.add(path)
 
 	return diff
 
 if __name__ == '__main__':
-	print(differences({'test.txt': '098f6bcd4621d373cade4e832627b4f6'}))
+	print(differences({"fold": {"fold": {"test": ""}}, "test.txt": "aoeu"}))

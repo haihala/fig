@@ -3,15 +3,11 @@ from bfc import construct_tree
 import json
 
 def fetch_response(project_path):
-	tree, error = construct_tree(root=project_path)
-	if error:
-		status = error
-	else:
-		status = "ok"
+	tree = construct_tree(root=project_path)
 
 	packet = {
 		"files": tree,
-		"status": status
+		"status": "ok"
 	}
 	return json.dumps(packet).encode("UTF-8")
 

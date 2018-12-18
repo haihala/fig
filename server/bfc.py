@@ -26,8 +26,6 @@ def md5sum(path):
 
 def construct_tree(root='.'):
 	tree = {}
-	if not os.path.exists(root):
-		return None, "404"
 
 	for item in os.listdir(root):
 		path = os.path.join(root, item)
@@ -36,4 +34,4 @@ def construct_tree(root='.'):
 		else:
 			tree[item] = construct_tree(root=path)
 
-	return tree, None
+	return tree

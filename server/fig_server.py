@@ -35,7 +35,7 @@ class Fig_server(socketserver.BaseRequestHandler):
 			# Client requested the contents of a file
 			path_to_file=os.path.join(self.current_projects[self.client_address], self.data["path"])
 			exists = os.path.exists(path_to_file)
-			folder = not os.path.isdir(path_to_file)
+			folder = os.path.isdir(path_to_file)
 			contents = ""
 			if exists and not folder:
 				with open(path_to_file, 'r') as f:

@@ -31,6 +31,7 @@ def fetch_server_version(sock, project):
 
 	if server_structure["status"] != "ok":
 		debug_print("Status: " + server_structure["status"])
+	print(server_structure)
 	return server_structure["files"]
 
 def pull_sync(sock, project):
@@ -48,14 +49,17 @@ def pull_sync(sock, project):
 				if not os.path.exists(path):
 					os.mkdir(path)
 			else:
-				with open(path, "wb") as f:
+				with open(path, "w") as f:
 					f.write(reply["file"])
 		else:
 			# Delete stuff
-			if os.path.isdir(path):
-				shutil.rmtree(path)
-			else:
-				os.remove(path)
+			try:
+				if os.path.isdir(path):
+					shutil.rmtree(path)
+				else:
+					os.remove(path)
+			except FileNotFoundError:
+				pass
 
 		debug_print(path + " done writing to disk")
 
@@ -63,6 +67,7 @@ def pull_sync(sock, project):
 
 def push_sync(sock, project):
 	diff = differences(fetch_server_version(sock, project))
+	print(diff)
 	if diff:
 		debug_print("Local has newer files, uploading")
 		for path in diff:

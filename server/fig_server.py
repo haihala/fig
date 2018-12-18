@@ -65,6 +65,6 @@ class Fig_server(socketserver.BaseRequestHandler):
 				return delete_response(status="404")
 
 if __name__ == "__main__":
-	HOST, PORT = "localhost", 6969
+	HOST, PORT = "", 6969
 	server = socketserver.TCPServer((HOST, PORT), Fig_server)
 	server.serve_forever()
